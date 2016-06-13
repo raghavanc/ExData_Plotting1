@@ -1,0 +1,13 @@
+setwd("/Users/raghavanchandran/downloads")
+power <- read.table("household_power_consumption.txt", sep = ";", header = TRUE)
+power$Date <- as.Date(power$Date,"%d/%m/%Y")
+power_flt <- with(power, power[(Date == "2007-02-01"|Date == "2007-02-02" & Global_active_power != '?'),])
+power_flt$Global_active_power <- as.numeric(as.character(power_flt$Global_active_power))
+P_timestp <- paste(power_flt$Date,power_flt$Time)
+power_flt$timestp <- strptime(P_timestp,"%Y-%m-%d %H:%M:%S")
+## plot -2 
+P_timestp <- paste(power_flt$Date,power_flt$Time)
+power_flt$timestp <- strptime(P_timestp,"%Y-%m-%d %H:%M:%S")
+png(file= "plot2.png")
+plot(power_flt$timestp,power_flt$Global_active_power, type = "l", xlab = ' ', ylab = "Global Active Power(kilowatt)")
+dev.off()

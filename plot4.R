@@ -1,0 +1,24 @@
+setwd("/Users/raghavanchandran/downloads")
+power <- read.table("household_power_consumption.txt", sep = ";", header = TRUE)
+power$Date <- as.Date(power$Date,"%d/%m/%Y")
+power_flt <- with(power, power[(Date == "2007-02-01"|Date == "2007-02-02" & Global_active_power != '?'),])
+power_flt$Global_active_power <- as.numeric(as.character(power_flt$Global_active_power))
+P_timestp <- paste(power_flt$Date,power_flt$Time)
+power_flt$timestp <- strptime(P_timestp,"%Y-%m-%d %H:%M:%S")
+
+## plot -4 
+png(file= "plot4.png")
+par(mfrow = c(2,2))
+plot(power_flt$timestp,power_flt$Global_active_power, type = "l", xlab = ' ', ylab = "Global Active Power(kilowatt)")
+##
+power_flt$Voltage <- as.numeric(as.character(power_flt$Voltage))
+plot(power_flt$timestp,power_flt$Voltage, type = "l", xlab = "datetime", ylab = "Voltage")
+##
+plot(power_flt$timestp,power_flt$Sub_metering_1, type = "l", xlab = ' ', ylab = "Energy Sub metering", col = "black")
+points(power_flt$timestp,power_flt$Sub_metering_2, type = "l", xlab = ' ', col = "red")
+points(power_flt$timestp,power_flt$Sub_metering_3, type = "l", xlab = ' ', col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), lty = 1,  col= c("black", "red", "blue"))
+##
+power_flt$Global_reactive_power <- as.numeric(as.character(power_flt$Global_reactive_power))
+plot(power_flt$timestp,power_flt$Global_reactive_power, type = "l", xlab = 'datetime', ylab = "Global Reactive Power")
+dev.off()
